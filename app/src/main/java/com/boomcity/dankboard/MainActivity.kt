@@ -90,9 +90,12 @@ class MainActivity : AppCompatActivity() {
         //long highScore = sharedPref.getInt(getString(R.string.saved_high_score), defaultValue);
 
 
-       // val favoriteTabNames = hashSetOf<String>()
+        //val favoriteTabNames = hashSetOf<String>()
         //favoriteTabNames.add("dickbutt")
         //favoriteTabNames.add("dickbutt2")
+
+        //TODO putString to insert index + tab name
+        //TODO putStringSet to insert TabName + ListOfSoundClipIds
 
        // var set: Set<String> = favoriteTabNames
 
@@ -156,6 +159,10 @@ class MainActivity : AppCompatActivity() {
             mLayoutManager = LinearLayoutManager(rootView.context)
             mRecyclerView.setLayoutManager(mLayoutManager)
 
+
+            //Use this to initiate the proper tab
+            var tabIndex = this.arguments["tab_number"]
+
             var myDataset = listOf<String>("Dick","Dong","Balls","Dick","Dong","Balls","Dick","Dong","Balls","Dick","Dong","Balls")
 
 
@@ -171,16 +178,16 @@ class MainActivity : AppCompatActivity() {
              * The fragment argument representing the section number for this
              * fragment.-
              */
-            val ARG_SECTION_NUMBER = "section_number"
+            val ARG_SECTION_NUMBER = "tab_number"
 
             /**
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
+            fun newInstance(tabNumber: Int): PlaceholderFragment {
                 val fragment = PlaceholderFragment()
                 val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
+                args.putInt(ARG_SECTION_NUMBER, tabNumber)
                 fragment.arguments = args
                 return fragment
             }
