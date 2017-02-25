@@ -148,9 +148,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var mAdapter: RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>
         lateinit var mLayoutManager: RecyclerView.LayoutManager
 
-        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
-            val rootView = inflater!!.inflate(R.layout.fragment_main, container, false)
+        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+            val rootView = inflater!!.inflate(R.layout.fragment_sound_tab, container, false)
 
             mRecyclerView = rootView.findViewById(R.id.recycler_view) as RecyclerView
             mRecyclerView.setHasFixedSize(true)
@@ -158,7 +157,6 @@ class MainActivity : AppCompatActivity() {
             mRecyclerView.setLayoutManager(mLayoutManager)
 
             var myDataset = listOf<String>("Dick","Dong","Balls","Dick","Dong","Balls","Dick","Dong","Balls","Dick","Dong","Balls")
-
 
 
             mAdapter = SoundRecyclerAdapter(myDataset)
@@ -171,9 +169,9 @@ class MainActivity : AppCompatActivity() {
         companion object {
             /**
              * The fragment argument representing the section number for this
-             * fragment.
+             * fragment.-
              */
-            private val ARG_SECTION_NUMBER = "section_number"
+            val ARG_SECTION_NUMBER = "section_number"
 
             /**
              * Returns a new instance of this fragment for the given section
