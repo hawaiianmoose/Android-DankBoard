@@ -1,8 +1,6 @@
 package com.boomcity.dankboard
 
-import android.app.AlertDialog
 import android.content.Context
-import android.media.MediaPlayer
 import android.support.design.widget.TabLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
@@ -12,20 +10,15 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.support.v7.widget.RecyclerView
-import android.widget.*
 
 class MainActivity : AppCompatActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
-    private var mViewPager: ViewPager? = null
-    private var tabLayout: TabLayout? = null
+    lateinit var mViewPager: ViewPager
+    lateinit var tabLayout: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container) as ViewPager
-        mViewPager!!.adapter = mSectionsPagerAdapter
+        mViewPager.adapter = mSectionsPagerAdapter
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
-        tabLayout!!.setupWithViewPager(mViewPager)
+        tabLayout.setupWithViewPager(mViewPager)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
@@ -49,35 +42,6 @@ class MainActivity : AppCompatActivity() {
 //                    .setAction("Action", null).show()
             addNewTab()
         }
-
-        //favorite tab selector dialog
-        val builder = AlertDialog.Builder(this)
-        builder.setIcon(android.R.drawable.ic_dialog_email)
-        builder.setTitle("swag")
-
-        var arrayAdapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item)
-        arrayAdapter.add("Hardik")
-        arrayAdapter.add("Archit")
-        arrayAdapter.add("Jignesh")
-        arrayAdapter.add("Umang")
-        arrayAdapter.add("Gatti")
-
-        builder.setNegativeButton("cancel", { dialog, which ->
-            dialog.dismiss()
-        })
-
-        builder.setAdapter(arrayAdapter, { dialog, which ->
-
-            var strName = arrayAdapter.getItem(which)
-            var builderInner = AlertDialog.Builder(this)
-            builderInner.setMessage(strName)
-            builderInner.setTitle("Your Selected Item is")
-            builderInner.setPositiveButton("Ok", { dialog, which ->
-                dialog.dismiss()
-            })
-            builderInner.show()
-        })
-        builder.show()
 
         //sharedPref write
         var sharedPref = this.getPreferences(Context.MODE_PRIVATE)
@@ -110,10 +74,11 @@ class MainActivity : AppCompatActivity() {
             var check2 = check
         }
 
+        Utils.tabLayout = tabLayout
     }
 
     fun addNewTab() {
-        tabLayout?.addTab(tabLayout!!.newTab().setText("New Tab"))
+        tabLayout.addTab(tabLayout.newTab().setText("New Tab"))
         mSectionsPagerAdapter!!.addNewTab()
     }
 
@@ -142,99 +107,6 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    class PlaceholderFragment : Fragment() {
-
-        lateinit var mRecyclerView: RecyclerView
-        lateinit var mAdapter: RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>
-        lateinit var mLayoutManager: RecyclerView.LayoutManager
-
-        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            val rootView = inflater!!.inflate(R.layout.fragment_sound_tab, container, false)
-
-            mRecyclerView = rootView.findViewById(R.id.recycler_view) as RecyclerView
-            mRecyclerView.setHasFixedSize(true)
-            mLayoutManager = LinearLayoutManager(rootView.context)
-            mRecyclerView.setLayoutManager(mLayoutManager)
-
-
-            //Use this to initiate the proper tab
-            var tabIndex = this.arguments["tab_number"]
-
-            var myDataset = listOf<String>("Dick","Dong","Balls","Dick","Dong","Balls","Dick","Dong","Balls","Dick","Dong","Balls")
-
-
-            mAdapter = SoundRecyclerAdapter(myDataset)
-            mRecyclerView.setAdapter(mAdapter)
-
-
-            return rootView
-        }
-
-        companion object {
-            /**
-             * The fragment argument representing the section number for this
-             * fragment.-
-             */
-            val ARG_SECTION_NUMBER = "tab_number"
-
-            /**
-             * Returns a new instance of this fragment for the given section
-             * number.
-             */
-            fun newInstance(tabNumber: Int): PlaceholderFragment {
-                val fragment = PlaceholderFragment()
-                val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, tabNumber)
-                fragment.arguments = args
-                return fragment
-            }
-        }
-    }
-
-    class SoundRecyclerAdapter(data: List<String>) : RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>() {
-        private val mDataset: List<String> = data
-
-        override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-            var text = holder!!.mView.findViewById(R.id.sound_clip_text_view) as TextView
-            text.setText(mDataset[position])
-
-            var playButton = holder!!.mView.findViewById(R.id.play_button) as ImageButton
-            val mp = MediaPlayer.create(holder!!.mView.context, R.raw.test_sound)
-            mp.setOnCompletionListener {
-                playButton.setImageResource(android.R.drawable.ic_media_play)
-            }
-
-            playButton.setOnClickListener {
-                if(mp.isPlaying) {
-                    mp.pause()
-                    playButton.setImageResource(android.R.drawable.ic_media_play)
-                }
-                else
-                {
-                    mp.start()
-                    playButton.setImageResource(android.R.drawable.ic_media_pause)
-                }
-            }
-
-        }
-
-        override fun getItemCount(): Int {
-            return mDataset!!.size
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-            var v = LayoutInflater.from(parent!!.getContext()).inflate(R.layout.fragment_sound_clip, parent, false)
-
-            var vh = ViewHolder(v)
-            return vh
-        }
-
-        class ViewHolder(var mView: View) : RecyclerView.ViewHolder(mView)
-    }
-
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         private var tabCount: Int = 2
@@ -242,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1)
+            return TabFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
