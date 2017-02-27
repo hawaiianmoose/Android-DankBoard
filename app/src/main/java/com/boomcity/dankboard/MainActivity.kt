@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container) as ViewPager
         mViewPager.adapter = mSectionsPagerAdapter
+        mViewPager.setOffscreenPageLimit(5) //fuck android, set this to the total number of tabs that are created including ALL
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(mViewPager)
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             var check2 = check
         }
 
-        Utils.tabLayout = tabLayout
+        Utils.viewPager = mViewPager
     }
 
     fun addNewTab() {
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private var tabCount: Int = 2
+        private var tabCount: Int = 3
 
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.

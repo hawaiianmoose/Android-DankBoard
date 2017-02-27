@@ -8,13 +8,13 @@ class Utils {
 
     companion object{
         lateinit var viewPager: ViewPager
-        lateinit var tabLayout: TabLayout
+        //lateinit var tabLayout: TabLayout
 
         fun addClipToFavoriteTab(soundClip: SoundClip, tabIndex: Int){
-//            var selectedTabView = viewPager.getChildAt(tabIndex)
-//            var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
-//            var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
-//            soundAdapter.addSoundClip(soundClip)
+            var selectedTabView = viewPager.getChildAt(tabIndex)
+            var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
+            var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
+            soundAdapter.addSoundClip(soundClip)
 
 
             //
