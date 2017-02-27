@@ -12,6 +12,9 @@ import android.support.v4.view.ViewPager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.google.gson.Gson
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,8 +47,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         //sharedPref write
-        var sharedPref = this.getPreferences(Context.MODE_PRIVATE)
-        var editor = sharedPref.edit()
+
+        //var editor = sharedPref.edit()
         //editor.putInt(getString(R.string.saved_high_score), newHighScore);
         //editor.commit()
 
@@ -67,12 +70,12 @@ class MainActivity : AppCompatActivity() {
         //editor.commit()
 
 
-        var favs = sharedPref.getStringSet("FavoriteTabs", hashSetOf("Favorites 1"))
-
-        for (fav in favs!!) {
-            var check = fav
-            var check2 = check
-        }
+//        var favs = sharedPref.getStringSet("FavoriteTabs", hashSetOf("Favorites 1"))
+//
+//        for (fav in favs!!) {
+//            var check = fav
+//            var check2 = check
+//        }
 
         Utils.viewPager = mViewPager
     }
@@ -109,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private var tabCount: Int = 3
+        private var tabCount: Int = 2
 
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
@@ -132,6 +135,8 @@ class MainActivity : AppCompatActivity() {
         fun addNewTab() {
             tabCount++
             notifyDataSetChanged()
+            var sharedPrefs = baseContext.getSharedPreferences("TabNames", Context.MODE_PRIVATE)
+            sharedPrefs.edit().putString(tabCount.toString(),"Favorites" + tabCount)//putting new tab name
         }
     }
 }

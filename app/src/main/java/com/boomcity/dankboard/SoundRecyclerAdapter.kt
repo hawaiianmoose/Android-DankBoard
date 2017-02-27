@@ -10,6 +10,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
+import com.google.gson.Gson
+import android.R.id.edit
+import android.content.SharedPreferences.Editor
+
+
 
 
 class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>() {
@@ -78,11 +83,6 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
 //            builderInner.show()
 
             Utils.addClipToFavoriteTab(soundClip, which + 1)
-
-
-
-            //this.mDataset = testData
-            //this.notifyDataSetChanged()
         })
         builder.show()
     }
@@ -90,6 +90,15 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
     fun addSoundClip(soundClip: SoundClip) {
         mDataset.add(soundClip)
         notifyDataSetChanged()
+
+//        var tabDataInfo = TabDataInfo(arrayAdapter.getItem(which),which + 1,mDataset)
+//
+//        var sharedPrefs = context.getSharedPreferences("TabDataInfo", Context.MODE_PRIVATE)
+//        val prefsEditor = sharedPrefs.edit()
+//        val gson = Gson()
+//        val json = gson.toJson(tabDataInfo)
+//        prefsEditor.putString("TabDataInfo", json)
+//        prefsEditor.apply()
     }
 
     override fun getItemCount(): Int {
