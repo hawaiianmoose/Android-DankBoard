@@ -22,12 +22,16 @@ class Utils {
             sharedPreferences = sharedPrefs
         }
 
+        fun addNewTab(tabName: String, tabIndex: Int) {
+            tabsDataObject.tabsInfo!!.add(TabDataInfo(tabName,tabIndex))
+        }
+
         fun addClipToFavoriteTab(soundClip: SoundClip, tabIndex: Int){
             var selectedTabView = viewPager.getChildAt(tabIndex)
             var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
             var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
             soundAdapter.addSoundClip(soundClip)
-            tabsDataObject.getTab(tabIndex)!!.soundClips.add(soundClip)
+            tabsDataObject.getTab(tabIndex)!!.soundClips!!.add(soundClip)
             var json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }

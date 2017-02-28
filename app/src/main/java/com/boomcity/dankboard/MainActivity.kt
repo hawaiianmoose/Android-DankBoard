@@ -81,6 +81,12 @@ class MainActivity : AppCompatActivity() {
         val gson = Gson()
         val json = sharedPrefs.getString("TabDataInfo", "")
         val tabsData = gson.fromJson<TabsData>(json, TabsData::class.java)
+
+        if (tabsData == null) {
+            //first startup
+            //TODO
+        }
+
         Utils.init(mViewPager,tabsData,sharedPrefs)
     }
 
@@ -139,8 +145,7 @@ class MainActivity : AppCompatActivity() {
         fun addNewTab() {
             tabCount++
             notifyDataSetChanged()
-            var sharedPrefs = baseContext.getSharedPreferences("TabNames", Context.MODE_PRIVATE)
-            sharedPrefs.edit().putString(tabCount.toString(),"Favorites" + tabCount)//putting new tab name
+            Utils.addNewTab("Favorites" + tabCount, tabCount)
         }
     }
 }
