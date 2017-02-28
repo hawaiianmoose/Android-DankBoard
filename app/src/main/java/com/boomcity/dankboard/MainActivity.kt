@@ -14,8 +14,6 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.gson.Gson
 
-
-
 class MainActivity : AppCompatActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
@@ -30,11 +28,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container) as ViewPager
         mViewPager.adapter = mSectionsPagerAdapter
         mViewPager.setOffscreenPageLimit(5) //fuck android, set this to the total number of tabs that are created including ALL
+
+        getStoredTabData()
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(mViewPager)
@@ -76,8 +74,14 @@ class MainActivity : AppCompatActivity() {
 //            var check = fav
 //            var check2 = check
 //        }
+    }
 
-        Utils.viewPager = mViewPager
+    private fun getStoredTabData() {
+        var sharedPrefs = getPreferences(Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPrefs.getString("TabDataInfo", "")
+        val tabsData = gson.fromJson<TabsData>(json, TabsData::class.java)
+        Utils.init(mViewPager,tabsData,sharedPrefs)
     }
 
     fun addNewTab() {

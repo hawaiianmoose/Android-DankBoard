@@ -1,8 +1,5 @@
 package com.boomcity.dankboard
 
-import android.app.Application
-import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,7 +7,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.gson.Gson
 
 class TabFragment : Fragment() {
 
@@ -26,18 +22,18 @@ class TabFragment : Fragment() {
         mLayoutManager = LinearLayoutManager(rootView.context)
         mRecyclerView.setLayoutManager(mLayoutManager)
 
-
-        //get tab info
-        var sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPrefs.getString("TabDataInfo", "")
-        val tabDataInfo = gson.fromJson<TabDataInfo>(json, TabDataInfo::class.java)
-
-
         //Use this to initiate the proper tab
-        var tabIndex = this.arguments["tab_number"]
+        var tabIndex = this.arguments["tab_number"] as Int
+        var tabInfo = Utils.getTabsData().getTab(tabIndex)
 
-        if (tabIndex == 1) {
+        if (tabInfo != null) {
+            var myDataset = tabInfo.soundClips
+
+            mAdapter = SoundRecyclerAdapter(myDataset)
+            mRecyclerView.setAdapter(mAdapter)
+        }
+
+        else if (tabIndex == 1) {
             var myDataset = mutableListOf<SoundClip>(SoundClip("Dong",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
 
             mAdapter = SoundRecyclerAdapter(myDataset)
