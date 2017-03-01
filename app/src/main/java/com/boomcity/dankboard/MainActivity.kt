@@ -26,13 +26,14 @@ class MainActivity : AppCompatActivity() {
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
+        getStoredTabData()
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         mViewPager = findViewById(R.id.container) as ViewPager
         mViewPager.adapter = mSectionsPagerAdapter
         mViewPager.setOffscreenPageLimit(5) //fuck android, set this to the total number of tabs that are created including ALL
 
-        getStoredTabData()
+        Utils.setViewpager(mViewPager)
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(mViewPager)
@@ -77,17 +78,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getStoredTabData() {
-        var sharedPrefs = getPreferences(Context.MODE_PRIVATE)
+        val sharedPrefs = getPreferences(Context.MODE_PRIVATE)
         val gson = Gson()
-        val json = sharedPrefs.getString("TabDataInfo", "")
-        val tabsData = gson.fromJson<TabsData>(json, TabsData::class.java)
+        val json = sharedPrefs.getString("TabsDataInfo", "")
+        var tabsData = gson.fromJson<TabsData>(json, TabsData::class.java)
 
         if (tabsData == null) {
             //first startup
-            //TODO
+            tabsData = TabsData(mutableListOf(TabDataInfo("Favorites",1, mutableListOf())))
         }
 
-        Utils.init(mViewPager,tabsData,sharedPrefs)
+        Utils.init(tabsData,sharedPrefs)
     }
 
     fun addNewTab() {
@@ -122,11 +123,9 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private var tabCount: Int = 2
+        private var tabCount: Int = Utils.getTabsData().tabsInfo!!.size + 1
 
         override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return TabFragment.newInstance(position + 1)
         }
 
@@ -137,9 +136,8 @@ class MainActivity : AppCompatActivity() {
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
                 0 -> return "All"
-                1 -> return "Favorites 1"
             }
-            return "Favorites " + position
+            return Utils.getTabsData().tabsInfo!![position - 1].name
         }
 
         fun addNewTab() {

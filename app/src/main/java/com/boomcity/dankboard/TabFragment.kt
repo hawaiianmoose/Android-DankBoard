@@ -24,17 +24,16 @@ class TabFragment : Fragment() {
 
         //Use this to initiate the proper tab
         var tabIndex = this.arguments["tab_number"] as Int
-        var tabInfo = Utils.getTabsData().getTab(tabIndex)
+        var tabInfo = Utils.getTabsData().getTab(tabIndex -1)
 
-        if (tabInfo != null) {
-            var myDataset = tabInfo.soundClips
+        if (tabIndex == 1) {
+            var myDataset = mutableListOf<SoundClip>(SoundClip("Dong",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
 
             mAdapter = SoundRecyclerAdapter(myDataset)
             mRecyclerView.setAdapter(mAdapter)
         }
-
-        else if (tabIndex == 1) {
-            var myDataset = mutableListOf<SoundClip>(SoundClip("Dong",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
+        else if (tabInfo != null) {
+            var myDataset = tabInfo.soundClips
 
             mAdapter = SoundRecyclerAdapter(myDataset)
             mRecyclerView.setAdapter(mAdapter)

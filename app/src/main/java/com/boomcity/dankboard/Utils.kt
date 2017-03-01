@@ -16,8 +16,11 @@ class Utils {
             return tabsDataObject
         }
 
-        fun init(vp: ViewPager, tabsData: TabsData, sharedPrefs: SharedPreferences) {
+        fun setViewpager(vp: ViewPager) {
             viewPager = vp
+        }
+
+        fun init(tabsData: TabsData, sharedPrefs: SharedPreferences) {
             tabsDataObject = tabsData
             sharedPreferences = sharedPrefs
         }
@@ -30,7 +33,7 @@ class Utils {
             var selectedTabView = viewPager.getChildAt(tabIndex)
             var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
             var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
-            soundAdapter.addSoundClip(soundClip)
+            soundAdapter.addSoundClip()
             tabsDataObject.getTab(tabIndex)!!.soundClips!!.add(soundClip)
             var json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()

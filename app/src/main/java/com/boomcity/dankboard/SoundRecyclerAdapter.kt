@@ -80,8 +80,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
         builder.show()
     }
 
-    fun addSoundClip(soundClip: SoundClip) {
-        mDataset.add(soundClip)
+    fun addSoundClip() {
         notifyDataSetChanged()
     }
 
