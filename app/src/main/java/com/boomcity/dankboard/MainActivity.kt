@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         mViewPager.adapter = mSectionsPagerAdapter
         mViewPager.setOffscreenPageLimit(5) //fuck android, set this to the total number of tabs that are created including ALL
 
-        Utils.setViewpager(mViewPager)
+        DataService.setViewpager(mViewPager)
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(mViewPager)
@@ -88,11 +88,11 @@ class MainActivity : AppCompatActivity() {
             tabsData = TabsData(mutableListOf(TabDataInfo("Favorites",1, mutableListOf())))
         }
 
-        Utils.init(tabsData,sharedPrefs)
+        DataService.init(tabsData,sharedPrefs)
     }
 
     fun addNewTab() {
-        tabLayout.addTab(tabLayout.newTab().setText("New Tab"))
+        tabLayout.addTab(tabLayout.newTab())
         mSectionsPagerAdapter!!.addNewTab()
     }
 
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private var tabCount: Int = Utils.getTabsData().tabsInfo!!.size + 1
+        private var tabCount: Int = DataService.getTabsData().tabsInfo!!.size + 1
 
         override fun getItem(position: Int): Fragment {
             return TabFragment.newInstance(position + 1)
@@ -137,13 +137,13 @@ class MainActivity : AppCompatActivity() {
             when (position) {
                 0 -> return "All"
             }
-            return Utils.getTabsData().tabsInfo!![position - 1].name
+            return DataService.getTabsData().tabsInfo!![position - 1].name
         }
 
         fun addNewTab() {
+            DataService.addNewTab("New Tab", tabCount)
             tabCount++
             notifyDataSetChanged()
-            Utils.addNewTab("Favorites" + tabCount, tabCount)
         }
     }
 }

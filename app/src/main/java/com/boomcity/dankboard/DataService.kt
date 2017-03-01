@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.RecyclerView
 import com.google.gson.Gson
 
-class Utils {
+class DataService {
     companion object{
         private lateinit var viewPager: ViewPager
         private lateinit var tabsDataObject: TabsData
@@ -27,6 +27,8 @@ class Utils {
 
         fun addNewTab(tabName: String, tabIndex: Int) {
             tabsDataObject.tabsInfo!!.add(TabDataInfo(tabName,tabIndex))
+            var json = gson.toJson(tabsDataObject)
+            sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
         fun addClipToFavoriteTab(soundClip: SoundClip, tabIndex: Int){
@@ -34,7 +36,11 @@ class Utils {
             var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
             var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
             soundAdapter.addSoundClip()
-            tabsDataObject.getTab(tabIndex)!!.soundClips!!.add(soundClip)
+
+            var check = tabsDataObject
+            var check2 = tabsDataObject.getTab(tabIndex)
+
+            tabsDataObject.getTab(tabIndex)!!.soundClips.add(soundClip)
             var json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }

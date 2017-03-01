@@ -49,16 +49,15 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
     fun showTabSelectionDialog(context: Context, soundClip: SoundClip) {
         val builder = AlertDialog.Builder(context)
         builder.setIcon(android.R.drawable.ic_dialog_email)
-        builder.setTitle("swag")
+        builder.setTitle("Add dank sound to which tab?")
 
         var arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_item)
-        arrayAdapter.add("Hardik")
-        arrayAdapter.add("Archit")
-        arrayAdapter.add("Jignesh")
-        arrayAdapter.add("Umang")
-        arrayAdapter.add("Gatti")
 
-        builder.setNegativeButton("cancel", { dialog, which ->
+        for (tab in DataService.getTabsData().tabsInfo!!) {
+            arrayAdapter.add(tab.name)
+        }
+
+        builder.setNegativeButton("Cancel", { dialog, which ->
             dialog.dismiss()
         })
 
@@ -75,7 +74,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
 //            })
 //            builderInner.show()
 
-            Utils.addClipToFavoriteTab(soundClip, which + 1)
+            DataService.addClipToFavoriteTab(soundClip, which + 1)
         })
         builder.show()
     }

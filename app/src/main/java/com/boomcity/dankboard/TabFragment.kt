@@ -24,7 +24,7 @@ class TabFragment : Fragment() {
 
         //Use this to initiate the proper tab
         var tabIndex = this.arguments["tab_number"] as Int
-        var tabInfo = Utils.getTabsData().getTab(tabIndex -1)
+        var tabInfo = DataService.getTabsData().getTab(tabIndex -1)
 
         if (tabIndex == 1) {
             var myDataset = mutableListOf<SoundClip>(SoundClip("Dong",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
