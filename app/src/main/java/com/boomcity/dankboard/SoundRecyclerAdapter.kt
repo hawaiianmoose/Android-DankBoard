@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 
-class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>() {
+class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) : RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>() {
     private var mDataset: MutableList<SoundClip> = data
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
@@ -20,6 +20,11 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
 
         var text = holder!!.mView.findViewById(R.id.sound_clip_text_view) as TextView
         text.setText(mSoundClip.Title)
+
+        var deleteButton = holder.mView.findViewById(R.id.delete_button) as ImageButton
+        deleteButton.setOnClickListener {
+            DataService.removeSoundClipFromTab(this,mSoundClip, tabPosition)
+        }
 
         var playButton = holder!!.mView.findViewById(R.id.play_button) as ImageButton
         val mp = MediaPlayer.create(holder!!.mView.context, R.raw.test_sound)
@@ -74,13 +79,9 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>) : RecyclerView.Adapter<
 //            })
 //            builderInner.show()
 
-            DataService.addClipToFavoriteTab(soundClip, which + 1)
+            DataService.addClipToFavoriteTab(soundClip, which)
         })
         builder.show()
-    }
-
-    fun addSoundClip() {
-        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
