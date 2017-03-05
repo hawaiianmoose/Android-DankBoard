@@ -1,8 +1,8 @@
 package com.boomcity.dankboard
 
 import android.content.Context
+import android.opengl.Visibility
 import android.support.design.widget.TabLayout
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.support.v4.app.Fragment
@@ -12,13 +12,20 @@ import android.support.v4.view.ViewPager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import com.github.clans.fab.FloatingActionButton
 import com.google.gson.Gson
+import com.github.clans.fab.FloatingActionMenu
 
-class MainActivity : AppCompatActivity() {
 
+
+class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     lateinit var mViewPager: ViewPager
     lateinit var tabLayout: TabLayout
+    lateinit var tabFAM: FloatingActionMenu
+    lateinit var renameTabFab: FloatingActionButton
+    lateinit var deleteTabFab: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,44 +44,21 @@ class MainActivity : AppCompatActivity() {
 
         tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(mViewPager)
+        tabLayout.addOnTabSelectedListener(this)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-            addNewTab()
-        }
+        tabFAM = findViewById(R.id.tab_FAM) as FloatingActionMenu
+        renameTabFab = findViewById(R.id.floating_menu_rename) as FloatingActionButton
+        deleteTabFab = findViewById(R.id.floating_menu_delete) as FloatingActionButton
 
-        //sharedPref write
+        tabFAM.visibility = View.INVISIBLE
 
-        //var editor = sharedPref.edit()
-        //editor.putInt(getString(R.string.saved_high_score), newHighScore);
-        //editor.commit()
+        renameTabFab.setOnClickListener({
+            renameTab()
+        })
+        deleteTabFab.setOnClickListener({
+            //TODO something when floating action menu second item clicked
+        })
 
-        //shared pref read
-        //int defaultValue = getResources().getInteger(R.string.saved_high_score_default);
-        //long highScore = sharedPref.getInt(getString(R.string.saved_high_score), defaultValue);
-
-
-        //val favoriteTabNames = hashSetOf<String>()
-        //favoriteTabNames.add("dickbutt")
-        //favoriteTabNames.add("dickbutt2")
-
-        //TODO putString to insert index + tab name
-        //TODO putStringSet to insert TabName + ListOfSoundClipIds
-
-       // var set: Set<String> = favoriteTabNames
-
-       // editor.putStringSet("FavoriteTabs",set)
-        //editor.commit()
-
-
-//        var favs = sharedPref.getStringSet("FavoriteTabs", hashSetOf("Favorites 1"))
-//
-//        for (fav in favs!!) {
-//            var check = fav
-//            var check2 = check
-//        }
     }
 
     private fun getStoredTabData() {
@@ -96,6 +80,25 @@ class MainActivity : AppCompatActivity() {
         mSectionsPagerAdapter!!.addNewTab()
     }
 
+    fun renameTab() {
+
+    }
+
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab?) {
+        if (tab!!.position != 0){
+            tabFAM.visibility = View.VISIBLE
+        }
+        else {
+            tabFAM.visibility = View.INVISIBLE
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -107,11 +110,6 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
-
-
-        if (id == R.id.action_settings) {
-            return true
-        }
 
         if (id == R.id.action_new_tab) {
             addNewTab()
