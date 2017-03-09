@@ -7,10 +7,10 @@ class TabDataInfo (tabName: String, tabPosition: Int, soundClips: MutableList<So
 }
 
 class TabsData (tabsData: MutableList<TabDataInfo>?) {
-    val tabsInfo: MutableList<TabDataInfo>? = tabsData
+    val tabsList: MutableList<TabDataInfo>? = tabsData
 
     fun getTab(tabId: Int) : TabDataInfo? {
-        for (tab in tabsInfo!!) {
+        for (tab in tabsList!!) {
             if (tab.position == tabId) {
                 return tab
             }

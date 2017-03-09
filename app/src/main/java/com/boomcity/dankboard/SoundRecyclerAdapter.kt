@@ -26,8 +26,8 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
             DataService.removeSoundClipFromTab(this,mSoundClip, tabPosition)
         }
 
-        var playButton = holder!!.mView.findViewById(R.id.play_button) as ImageButton
-        val mp = MediaPlayer.create(holder!!.mView.context, R.raw.test_sound)
+        var playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
+        val mp = MediaPlayer.create(holder.mView.context, R.raw.test_sound)
         mp.setOnCompletionListener {
             playButton.setImageResource(android.R.drawable.ic_media_play)
         }
@@ -58,7 +58,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
         var arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_item)
 
-        for (tab in DataService.getTabsData().tabsInfo!!) {
+        for (tab in DataService.getTabsData().tabsList!!) {
             arrayAdapter.add(tab.name)
         }
 

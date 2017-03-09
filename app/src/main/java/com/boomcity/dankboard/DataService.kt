@@ -26,7 +26,15 @@ class DataService {
         }
 
         fun addNewTab(tabName: String, tabIndex: Int) {
-            tabsDataObject.tabsInfo!!.add(TabDataInfo(tabName,tabIndex))
+            tabsDataObject.tabsList!!.add(TabDataInfo(tabName,tabIndex))
+            var json = gson.toJson(tabsDataObject)
+            sharedPreferences.edit().putString("TabsDataInfo", json).apply()
+        }
+
+        fun deleteTab(tabIndex: Int) {
+            var adjustedIndex = tabIndex - 1
+
+            tabsDataObject.tabsList!!.removeAt(adjustedIndex)
             var json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }

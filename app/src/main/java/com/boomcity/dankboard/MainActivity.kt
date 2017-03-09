@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
             renameTab()
         })
         deleteTabFab.setOnClickListener({
-            //TODO something when floating action menu second item clicked
+            deleteTab()
         })
 
     }
@@ -84,6 +84,16 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
     }
 
+    fun deleteTab() {
+        var selectedTabIndex = tabLayout.selectedTabPosition
+        if (selectedTabIndex > 1) {
+            mSectionsPagerAdapter!!.removeTab(selectedTabIndex)
+            val tab = tabLayout.getTabAt(selectedTabIndex - 1)
+            tab!!.select()
+            tabFAM.close(true)
+        }
+    }
+
     override fun onTabReselected(tab: TabLayout.Tab?) {
     }
 
@@ -97,6 +107,8 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         else {
             tabFAM.visibility = View.INVISIBLE
         }
+
+        deleteTabFab.isEnabled = tab.position > 1
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -121,7 +133,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private var tabCount: Int = DataService.getTabsData().tabsInfo!!.size + 1
+        private var tabCount: Int = DataService.getTabsData().tabsList!!.size + 1
 
         override fun getItem(position: Int): Fragment {
             return TabFragment.newInstance(position + 1)
@@ -135,12 +147,18 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
             when (position) {
                 0 -> return "All"
             }
-            return DataService.getTabsData().tabsInfo!![position - 1].name
+            return DataService.getTabsData().tabsList!![position - 1].name
         }
 
         fun addNewTab() {
             DataService.addNewTab("New Tab", tabCount)
             tabCount++
+            notifyDataSetChanged()
+        }
+
+        fun removeTab(tabIndex: Int) {
+            DataService.deleteTab(tabIndex)
+            tabCount--
             notifyDataSetChanged()
         }
     }
