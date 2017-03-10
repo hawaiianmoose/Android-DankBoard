@@ -37,6 +37,13 @@ class DataService {
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
+        fun renameTab(newTabName: String, tabIndex: Int) {
+            tabsDataObject.tabsList!![tabIndex].name = newTabName
+            var json = gson.toJson(tabsDataObject)
+            sharedPreferences.edit().putString("TabsDataInfo", json).apply()
+            viewPager.adapter.notifyDataSetChanged()
+        }
+
         fun addClipToFavoriteTab(soundClip: SoundClip, tabIndex: Int){
             var selectedTabView = viewPager.getChildAt(tabIndex)
             var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
@@ -48,7 +55,6 @@ class DataService {
         }
 
         fun removeSoundClipFromTab(soundAdapter: SoundRecyclerAdapter, soundClip: SoundClip, tabIndex: Int) {
-
             tabsDataObject.getTab(tabIndex)!!.soundClips.removeAll { clip ->
                 clip.AudioId == soundClip.AudioId
             }

@@ -19,9 +19,10 @@ class EditDialogFragment : DialogFragment() {
         builder.setView(inflater.inflate(R.layout.edit_tab_name_dialog, null))
                 // Add action buttons
                 .setPositiveButton(R.string.dialog_ok, DialogInterface.OnClickListener { dialog, id ->
-                    var check3 = dialog as Dialog
-                    var editText = check3.findViewById(R.id.new_tab_name_text) as EditText
-                    var text = editText.text //TODO this is the text entered
+                    var dialogBox = dialog as Dialog
+                    var editText = dialogBox.findViewById(R.id.new_tab_name_text) as EditText
+                    var newTabName = editText.text.toString()
+                    DataService.renameTab(newTabName,this.tag.toInt())
                 })
                 .setNegativeButton(R.string.dialog_cancel, DialogInterface.OnClickListener { dialog, id -> dialog.dismiss() })
         return builder.create()

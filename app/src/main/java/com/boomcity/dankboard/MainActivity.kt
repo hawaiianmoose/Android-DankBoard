@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
     fun renameTab() {
         val newFragment = EditDialogFragment()
-        newFragment.show(fragmentManager, "Ween")
-
+        newFragment.show(fragmentManager, tabLayout.selectedTabPosition.toString())
+        tabFAM.close(true)
     }
 
     fun deleteTab() {
@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         }
 
         deleteTabFab.isEnabled = tab.position > 1
+        tabFAM.close(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
