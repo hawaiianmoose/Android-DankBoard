@@ -98,4 +98,5 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
     }
 
     class ViewHolder(var mView: View) : RecyclerView.ViewHolder(mView)
+
 }

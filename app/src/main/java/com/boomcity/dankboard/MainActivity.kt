@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         deleteTabFab.setOnClickListener({
             deleteTab()
         })
-
     }
 
     private fun getStoredTabData() {
@@ -72,13 +71,13 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         DataService.init(tabsData,sharedPrefs)
     }
 
-    fun addNewTab() {
+    fun addNewTab(tabName: String) {
         tabLayout.addTab(tabLayout.newTab())
-        mSectionsPagerAdapter!!.addNewTab()
+        mSectionsPagerAdapter!!.addNewTab(tabName)
     }
 
     fun renameTab() {
-        val newFragment = EditDialogFragment()
+        val newFragment = EditDialogFragment(this)
         newFragment.show(fragmentManager, tabLayout.selectedTabPosition.toString())
         tabFAM.close(true)
     }
@@ -117,17 +116,15 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
         if (id == R.id.action_new_tab && tabLayout.tabCount < 8) {
-            addNewTab()
+            val newFragment = EditDialogFragment(this)
+            newFragment.show(fragmentManager, null)
             return true
         }
         else {
-            //todo msg popup
+            //TODO msg popup
         }
 
         return super.onOptionsItemSelected(item)
@@ -152,8 +149,8 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
             return DataService.getTabsData().tabsList!![position].name
         }
 
-        fun addNewTab() {
-            DataService.addNewTab("New Tab", tabCount)
+        fun addNewTab(tabName: String) {
+            DataService.addNewTab(tabName, tabCount)
             tabCount++
             notifyDataSetChanged()
         }
