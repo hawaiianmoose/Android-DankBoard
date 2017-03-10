@@ -59,7 +59,9 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
         var arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_item)
 
         for (tab in DataService.getTabsData().tabsList!!) {
-            arrayAdapter.add(tab.name)
+            if(tab.position != 0) {
+                arrayAdapter.add(tab.name)
+            }
         }
 
         builder.setNegativeButton("Cancel", { dialog, which ->
@@ -79,7 +81,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 //            })
 //            builderInner.show()
 
-            DataService.addClipToFavoriteTab(soundClip, which)
+            DataService.addClipToFavoriteTab(soundClip, which + 1)
         })
         builder.show()
     }

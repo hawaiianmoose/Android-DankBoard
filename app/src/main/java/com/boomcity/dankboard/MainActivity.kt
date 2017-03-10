@@ -1,7 +1,6 @@
 package com.boomcity.dankboard
 
 import android.content.Context
-import android.opengl.Visibility
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -16,8 +15,6 @@ import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.google.gson.Gson
 import com.github.clans.fab.FloatingActionMenu
-
-
 
 class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
@@ -38,7 +35,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         mViewPager = findViewById(R.id.container) as ViewPager
         mViewPager.adapter = mSectionsPagerAdapter
-        mViewPager.setOffscreenPageLimit(5) //fuck android, set this to the total number of tabs that are created including ALL
+        mViewPager.setOffscreenPageLimit(10) //10 max tabs
 
         DataService.setViewpager(mViewPager)
 
@@ -69,7 +66,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
         if (tabsData == null) {
             //first startup
-            tabsData = TabsData(mutableListOf(TabDataInfo("Favorites",1, mutableListOf())))
+            tabsData = TabsData(mutableListOf(TabDataInfo("All",0, mutableListOf()),TabDataInfo("Favorites", 1, mutableListOf())))
         }
 
         DataService.init(tabsData,sharedPrefs)
@@ -81,6 +78,8 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     }
 
     fun renameTab() {
+        val newFragment = EditDialogFragment()
+        newFragment.show(fragmentManager, "Ween")
 
     }
 
@@ -112,7 +111,6 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -123,9 +121,12 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_new_tab) {
+        if (id == R.id.action_new_tab && tabLayout.tabCount < 8) {
             addNewTab()
             return true
+        }
+        else {
+            //todo msg popup
         }
 
         return super.onOptionsItemSelected(item)
@@ -133,10 +134,10 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        private var tabCount: Int = DataService.getTabsData().tabsList!!.size + 1
+        private var tabCount: Int = DataService.getTabsData().tabsList!!.size
 
         override fun getItem(position: Int): Fragment {
-            return TabFragment.newInstance(position + 1)
+            return TabFragment.newInstance(position)
         }
 
         override fun getCount(): Int {
@@ -147,7 +148,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
             when (position) {
                 0 -> return "All"
             }
-            return DataService.getTabsData().tabsList!![position - 1].name
+            return DataService.getTabsData().tabsList!![position].name
         }
 
         fun addNewTab() {

@@ -32,29 +32,24 @@ class DataService {
         }
 
         fun deleteTab(tabIndex: Int) {
-            var adjustedIndex = tabIndex - 1
-
-            tabsDataObject.tabsList!!.removeAt(adjustedIndex)
+            tabsDataObject.tabsList!!.removeAt(tabIndex)
             var json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
         fun addClipToFavoriteTab(soundClip: SoundClip, tabIndex: Int){
-            var adjustedIndex = tabIndex + 1
-
-            var selectedTabView = viewPager.getChildAt(adjustedIndex)
+            var selectedTabView = viewPager.getChildAt(tabIndex)
             var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
             var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
-            tabsDataObject.getTab(adjustedIndex)!!.soundClips.add(soundClip)
+            tabsDataObject.getTab(tabIndex)!!.soundClips.add(soundClip)
             var json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
             soundAdapter.notifyDataSetChanged()
         }
 
         fun removeSoundClipFromTab(soundAdapter: SoundRecyclerAdapter, soundClip: SoundClip, tabIndex: Int) {
-            var adjustedIndex = tabIndex - 1
 
-            tabsDataObject.getTab(adjustedIndex)!!.soundClips.removeAll { clip ->
+            tabsDataObject.getTab(tabIndex)!!.soundClips.removeAll { clip ->
                 clip.AudioId == soundClip.AudioId
             }
             var json = gson.toJson(tabsDataObject)
