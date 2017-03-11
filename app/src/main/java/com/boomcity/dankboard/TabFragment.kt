@@ -18,7 +18,6 @@ class TabFragment : Fragment() {
         val rootView = inflater!!.inflate(R.layout.fragment_sound_tab, container, false)
 
         mRecyclerView = rootView.findViewById(R.id.recycler_view) as RecyclerView
-        //mRecyclerView.setOnScrollListener(HidingScrollListener())
         mRecyclerView.setHasFixedSize(true)
         mLayoutManager = LinearLayoutManager(rootView.context)
         mRecyclerView.setLayoutManager(mLayoutManager)
@@ -60,41 +59,4 @@ class TabFragment : Fragment() {
             return fragment
         }
     }
-
-//    class HidingScrollListener : RecyclerView.OnScrollListener() {
-//        private var scrolledDistance = 0
-//        private var controlsVisible = true
-//
-//        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-//            super.onScrolled(recyclerView, dx, dy)
-//
-//            if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
-//                onHide()
-//                controlsVisible = false
-//                scrolledDistance = 0
-//            } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
-//                onShow()
-//                controlsVisible = true
-//                scrolledDistance = 0
-//            }
-//
-//            if (controlsVisible && dy > 0 || !controlsVisible && dy < 0) {
-//                scrolledDistance += dy
-//            }
-//        }
-//
-//        fun onHide() {
-//             mToolbar.animate().translationY(-mToolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-//
-//  FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
-//  int fabBottomMargin = lp.bottomMargin;
-//mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
-//        }
-//        fun onShow()
-//
-//        companion object {
-//            private val HIDE_THRESHOLD = 20
-//        }
-//
-//    }
 }

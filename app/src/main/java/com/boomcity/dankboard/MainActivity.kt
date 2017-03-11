@@ -1,5 +1,6 @@
 package com.boomcity.dankboard
 
+import android.app.AlertDialog
 import android.content.Context
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
@@ -125,7 +126,12 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
             return true
         }
         else {
-            //TODO msg popup
+            val errorBuilder = AlertDialog.Builder(this, R.style.DankAlertDialogStyle)
+            errorBuilder.setTitle("Ya'll got too many tabs dawg.")
+            errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
+                dialog.dismiss()
+            })
+            errorBuilder.show()
         }
 
         return super.onOptionsItemSelected(item)

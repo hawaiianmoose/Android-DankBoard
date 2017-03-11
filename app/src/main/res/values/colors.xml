@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#19A15F</color>
     <color name="colorPrimaryDark">#10884E</color>
+    <color name="dankGreen">#105D36</color>
     <color name="colorAccent">#ffffff</color>
     <color name="matteBlack">#282828</color>
     <color name="neonGreen">#b10dff00</color>

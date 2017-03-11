@@ -11,6 +11,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:textColorAlertDialogListItem">@color/fadedWhite</item>
     </style>
 
     <style name="DankAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

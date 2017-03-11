@@ -16,17 +16,20 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
 
-        var mSoundClip = SoundClip(mDataset[position].Title,mDataset[position].AudioId)
+        val mSoundClip = SoundClip(mDataset[position].Title,mDataset[position].AudioId)
 
-        var text = holder!!.mView.findViewById(R.id.sound_clip_text_view) as TextView
+        val text = holder!!.mView.findViewById(R.id.sound_clip_text_view) as TextView
         text.setText(mSoundClip.Title)
 
-        var deleteButton = holder.mView.findViewById(R.id.delete_button) as ImageButton
-        deleteButton.setOnClickListener {
-            DataService.removeSoundClipFromTab(this,mSoundClip, tabPosition)
+        val deleteExists = holder.mView.findViewById(R.id.delete_button)
+        if (deleteExists != null) {
+            val deleteButton = holder.mView.findViewById(R.id.delete_button) as ImageButton
+            deleteButton.setOnClickListener {
+                DataService.removeSoundClipFromTab(this,mSoundClip, tabPosition)
+            }
         }
 
-        var playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
+        val playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
         val mp = MediaPlayer.create(holder.mView.context, R.raw.test_sound)
         mp.setOnCompletionListener {
             playButton.setImageResource(R.drawable.ic_playbutton)
@@ -44,16 +47,18 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
             }
         }
 
-        var addToFavoriteButton = holder.mView.findViewById(R.id.favorite_button) as ImageButton
-        addToFavoriteButton.setTag(mDataset[position].AudioId)
-        addToFavoriteButton.setOnClickListener {
-            showTabSelectionDialog(holder.mView.context, mSoundClip)
+        val favoritesExists = holder.mView.findViewById(R.id.favorite_button)
+        if (favoritesExists != null) {
+            val addToFavoriteButton = holder.mView.findViewById(R.id.favorite_button) as ImageButton
+            addToFavoriteButton.setTag(mDataset[position].AudioId)
+            addToFavoriteButton.setOnClickListener {
+                showTabSelectionDialog(holder.mView.context, mSoundClip)
+            }
         }
     }
 
     fun showTabSelectionDialog(context: Context, soundClip: SoundClip) {
-        val builder = AlertDialog.Builder(context)
-        builder.setIcon(android.R.drawable.ic_dialog_email)
+        val builder = AlertDialog.Builder(context, R.style.DankAlertDialogStyle)
         builder.setTitle("Add dank sound to which tab?")
 
         var arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_item)
@@ -70,19 +75,19 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
         builder.setAdapter(arrayAdapter, { dialog, which ->
 
-            //var tabName = arrayAdapter.getItem(which)
-//            var builderInner = AlertDialog.Builder(context)
-//            builderInner.setMessage(strName)
-//            builderInner.setTitle("Your Selected Item is")
-//            builderInner.setPositiveButton("Ok", { dialog, which ->
-//                dialog.dismiss()
-//                //val lw = (dialog as AlertDialog).listView
-//                //checkedItem = lw.adapter.getItem(lw.checkedItemPosition)
-//            })
-//            builderInner.show()
-
-            DataService.addClipToFavoriteTab(soundClip, which + 1)
+            if (DataService.getTabsData().getTab(which + 1)!!.soundClips.any { clip -> clip.AudioId == soundClip.AudioId }) {
+                val errorBuilder = AlertDialog.Builder(context, R.style.DankAlertDialogStyle)
+                errorBuilder.setTitle("This dank sound clip is already in that favorite tab bruh!")
+                errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
+                    dialog.dismiss()
+                })
+                errorBuilder.show()
+            }
+            else {
+                DataService.addClipToFavoriteTab(soundClip, which + 1)
+            }
         })
+
         builder.show()
     }
 
@@ -91,9 +96,18 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        var v = LayoutInflater.from(parent!!.getContext()).inflate(R.layout.fragment_sound_clip, parent, false)
 
-        var vh = ViewHolder(v)
+        var soundClipFragmentId: Int
+
+        if (tabPosition > 0) {
+            soundClipFragmentId = R.layout.fragment_sound_clip
+        }
+        else {
+            soundClipFragmentId = R.layout.fragment_sound_clip_all
+        }
+
+        val v = LayoutInflater.from(parent!!.getContext()).inflate(soundClipFragmentId, parent, false)
+        val vh = ViewHolder(v)
         return vh
     }
 
