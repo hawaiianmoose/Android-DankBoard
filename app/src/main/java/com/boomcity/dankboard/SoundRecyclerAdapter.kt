@@ -29,13 +29,13 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
         var playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
         val mp = MediaPlayer.create(holder.mView.context, R.raw.test_sound)
         mp.setOnCompletionListener {
-            playButton.setImageResource(android.R.drawable.ic_media_play)
+            playButton.setImageResource(R.drawable.ic_playbutton)
         }
 
         playButton.setOnClickListener {
             if(mp.isPlaying) {
                 mp.pause()
-                playButton.setImageResource(android.R.drawable.ic_media_play)
+                playButton.setImageResource(R.drawable.ic_playbutton)
             }
             else
             {

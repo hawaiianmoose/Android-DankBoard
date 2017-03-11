@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         setContentView(R.layout.activity_main)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
+        //toolbar.setLogo(R.drawable.ic_marijuanaicon)
         setSupportActionBar(toolbar)
         getStoredTabData()
 

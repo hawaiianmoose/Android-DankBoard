@@ -28,7 +28,7 @@ class TabFragment : Fragment() {
         var tabInfo = DataService.getTabsData().getTab(tabIndex)
 
         if (tabIndex == 0) {
-            var myDataset = mutableListOf<SoundClip>(SoundClip("Dong",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
+            var myDataset = mutableListOf<SoundClip>(SoundClip("Dedotated Wam For Computer",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
 
             mAdapter = SoundRecyclerAdapter(myDataset, tabIndex)
             mRecyclerView.setAdapter(mAdapter)
