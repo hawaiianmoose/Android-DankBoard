@@ -3,6 +3,7 @@ package com.boomcity.dankboard
 import android.app.AlertDialog
 import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +16,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
     private var mDataset: MutableList<SoundClip> = data
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-
-        val mSoundClip = SoundClip(mDataset[position].Title,mDataset[position].AudioId)
+        val mSoundClip = SoundClip(mDataset[position].Title,mDataset[position].AudioId, mDataset[position].Path)
 
         val text = holder!!.mView.findViewById(R.id.sound_clip_text_view) as TextView
         text.setText(mSoundClip.Title)
@@ -30,7 +30,15 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
         }
 
         val playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
-        val mp = MediaPlayer.create(holder.mView.context, R.raw.test_sound)
+        val mp: MediaPlayer
+
+        if(mSoundClip.Path != null) {
+            mp = MediaPlayer.create(holder.mView.context, Uri.parse(mSoundClip.Path))
+        }
+        else {
+            mp = MediaPlayer.create(holder.mView.context, mSoundClip.AudioId)
+        }
+
         mp.setOnCompletionListener {
             playButton.setImageResource(R.drawable.ic_playbutton)
         }

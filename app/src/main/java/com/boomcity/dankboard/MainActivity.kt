@@ -14,8 +14,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.github.clans.fab.FloatingActionButton
-import com.google.gson.Gson
 import com.github.clans.fab.FloatingActionMenu
+import android.content.Intent
+import android.app.Activity
+import android.net.Uri
+import com.google.gson.*
 
 class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
@@ -24,6 +27,10 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     lateinit var tabFAM: FloatingActionMenu
     lateinit var renameTabFab: FloatingActionButton
     lateinit var deleteTabFab: FloatingActionButton
+
+    companion object {
+        val READ_REQUEST_CODE = 42
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +74,8 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
         if (tabsData == null) {
             //first startup
-            tabsData = TabsData(mutableListOf(TabDataInfo("All",0, mutableListOf()),TabDataInfo("Favorites", 1, mutableListOf())))
+            var defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Dedotated Wam For Computer",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
+            tabsData = TabsData(mutableListOf(TabDataInfo("All",0, defaultTabSounds),TabDataInfo("Favorites", 1, mutableListOf())))
         }
 
         DataService.init(tabsData,sharedPrefs)
@@ -107,7 +115,6 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         else {
             tabFAM.visibility = View.INVISIBLE
         }
-
         deleteTabFab.isEnabled = tab.position > 1
         tabFAM.close(true)
     }
@@ -120,21 +127,46 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if (id == R.id.action_new_tab && tabLayout.tabCount < 8) {
-            val newFragment = EditDialogFragment(this)
-            newFragment.show(fragmentManager, null)
-            return true
+        if (id == R.id.action_new_tab) {
+            if (tabLayout.tabCount < 8) {
+                val newFragment = EditDialogFragment(this)
+                newFragment.show(fragmentManager, null)
+                return true
+            }
+            else {
+                val errorBuilder = AlertDialog.Builder(this, R.style.DankAlertDialogStyle)
+                errorBuilder.setTitle("Ya'll got too many tabs dawg.")
+                errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
+                    dialog.dismiss()
+                })
+                errorBuilder.show()
+            }
         }
-        else {
-            val errorBuilder = AlertDialog.Builder(this, R.style.DankAlertDialogStyle)
-            errorBuilder.setTitle("Ya'll got too many tabs dawg.")
-            errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
-                dialog.dismiss()
-            })
-            errorBuilder.show()
+
+        if (id == R.id.action_new_sound) {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "audio/*"
+            startActivityForResult(intent, READ_REQUEST_CODE)
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            var audioUri: Uri
+            if (resultData != null) {
+                audioUri = resultData.data
+                val newSoundNameFragment = NewSoundClipDialogFragment(this)
+                newSoundNameFragment.show(fragmentManager,audioUri.toString())
+            }
+        }
+    }
+
+    fun newSoundClipName(soundClipName: String, audioUri: String) {
+        var customSoundClip = SoundClip(soundClipName, System.currentTimeMillis().toInt(),audioUri)
+        DataService.addClipToFavoriteTab(customSoundClip, 0)
     }
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
