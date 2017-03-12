@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
         if (tabsData == null) {
             //first startup
-            var defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Dedotated Wam For Computer",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
+            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Dedotated Wam For Computer",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
             tabsData = TabsData(mutableListOf(TabDataInfo("All",0, defaultTabSounds),TabDataInfo("Favorites", 1, mutableListOf())))
         }
 
@@ -93,12 +93,27 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     }
 
     fun deleteTab() {
-        var selectedTabIndex = tabLayout.selectedTabPosition
+        val selectedTabIndex = tabLayout.selectedTabPosition
         if (selectedTabIndex > 1) {
             mSectionsPagerAdapter!!.removeTab(selectedTabIndex)
             val tab = tabLayout.getTabAt(selectedTabIndex - 1)
             tab!!.select()
             tabFAM.close(true)
+        }
+    }
+
+    fun newSoundClipName(soundClipName: String, audioUri: String) {
+        if (DataService.getTabsData().getTab(0)!!.soundClips.any { clip -> clip.Title.toLowerCase() == soundClipName.toLowerCase() }) {
+            val errorBuilder = AlertDialog.Builder(this, R.style.DankAlertDialogStyle)
+            errorBuilder.setTitle("Yo that name is already in use man.")
+            errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
+                dialog.dismiss()
+            })
+            errorBuilder.show()
+        }
+        else {
+            val customSoundClip = SoundClip(soundClipName, System.currentTimeMillis().toInt(),audioUri)
+            DataService.addClipToFavoriteTab(customSoundClip, 0)
         }
     }
 
@@ -155,18 +170,13 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            var audioUri: Uri
+            val audioUri: Uri
             if (resultData != null) {
                 audioUri = resultData.data
                 val newSoundNameFragment = NewSoundClipDialogFragment(this)
                 newSoundNameFragment.show(fragmentManager,audioUri.toString())
             }
         }
-    }
-
-    fun newSoundClipName(soundClipName: String, audioUri: String) {
-        var customSoundClip = SoundClip(soundClipName, System.currentTimeMillis().toInt(),audioUri)
-        DataService.addClipToFavoriteTab(customSoundClip, 0)
     }
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
