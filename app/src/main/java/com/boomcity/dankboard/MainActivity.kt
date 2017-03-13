@@ -18,11 +18,15 @@ import com.github.clans.fab.FloatingActionMenu
 import android.content.Intent
 import android.app.Activity
 import android.net.Uri
+import android.support.v7.widget.RecyclerView
 import com.google.gson.*
+import android.support.design.widget.AppBarLayout
+
 
 class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     lateinit var mViewPager: ViewPager
+    lateinit var mToolBar: Toolbar
     lateinit var tabLayout: TabLayout
     lateinit var tabFAM: FloatingActionMenu
     lateinit var renameTabFab: FloatingActionButton
@@ -36,9 +40,9 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        mToolBar = findViewById(R.id.toolbar) as Toolbar
         //toolbar.setLogo(R.drawable.ic_marijuanaicon)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(mToolBar)
         getStoredTabData()
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
@@ -74,7 +78,10 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
         if (tabsData == null) {
             //first startup
-            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Dedotated Wam For Computer",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound))
+            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Dedotated Wam For Computer",R.raw.test_sound), SoundClip("Dank",R.raw.test_sound),
+                    SoundClip("Dank2",R.raw.test_sound),SoundClip("Dank3",R.raw.test_sound),SoundClip("Dank4",R.raw.test_sound),
+                    SoundClip("Dank5",R.raw.test_sound),SoundClip("Dank6",R.raw.test_sound),SoundClip("Dank7",R.raw.test_sound),
+                    SoundClip("Dank8",R.raw.test_sound),SoundClip("Dank9",R.raw.test_sound),SoundClip("Dank10",R.raw.test_sound))
             tabsData = TabsData(mutableListOf(TabDataInfo("All",0, defaultTabSounds),TabDataInfo("Favorites", 1, mutableListOf())))
         }
 
@@ -114,6 +121,19 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
         else {
             val customSoundClip = SoundClip(soundClipName, System.currentTimeMillis().toInt(),audioUri)
             DataService.addClipToFavoriteTab(customSoundClip, 0)
+            goToNewlyCreatedSoundClip()
+        }
+    }
+
+    private fun goToNewlyCreatedSoundClip() {
+        tabLayout.getTabAt(0)!!.select()
+        val recyclerView = mViewPager.getChildAt(0).findViewById(R.id.recycler_view) as RecyclerView
+        val check = recyclerView.adapter.itemCount
+        recyclerView.verticalScrollbarPosition = check
+        recyclerView.smoothScrollToPosition(check - 1)
+
+        if (mToolBar.getParent() is AppBarLayout) {
+            (mToolBar.getParent() as AppBarLayout).setExpanded(false,true)
         }
     }
 
