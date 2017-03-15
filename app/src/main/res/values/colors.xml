@@ -8,4 +8,5 @@
     <color name="neonGreen">#b10dff00</color>
     <color name="opaqueBlack">#be000000</color>
     <color name="fadedWhite">#afffffff</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

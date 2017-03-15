@@ -13,4 +13,10 @@
         android:orderInCategory="100"
         android:title="@string/new_custom_sound"
         app:showAsAction="never" />
+
+    <!--<item-->
+        <!--android:id="@+id/about_activity"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/title_activity_about"-->
+        <!--app:showAsAction="never" />-->
 </menu>

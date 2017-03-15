@@ -9,4 +9,6 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_aight">Aight</string>
     <string name="new_custom_sound">Add Custom Sound Clip</string>
+
+    <string name="title_activity_about">About</string>
 </resources>
