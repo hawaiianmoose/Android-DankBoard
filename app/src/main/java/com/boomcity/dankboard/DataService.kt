@@ -23,6 +23,8 @@ class DataService {
         fun init(tabsData: TabsData, sharedPrefs: SharedPreferences) {
             tabsDataObject = tabsData
             sharedPreferences = sharedPrefs
+            var json = gson.toJson(tabsDataObject)
+            sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
         fun addNewTab(tabName: String, tabIndex: Int) {

@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
         if (tabsData == null) {
             //first startup
-            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Scott Bradford",R.raw.bradford), SoundClip("Dank",R.raw.test_sound),
+            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("Scott Bradford",R.raw.bradford), SoundClip("Titty City",R.raw.tittycity),
                     SoundClip("Dank2",R.raw.test_sound),SoundClip("Dank3",R.raw.test_sound),SoundClip("Dank4",R.raw.test_sound),
                     SoundClip("Dank5",R.raw.test_sound),SoundClip("Dank6",R.raw.test_sound),SoundClip("Dank7",R.raw.test_sound),
                     SoundClip("Dank8",R.raw.test_sound),SoundClip("Dank9",R.raw.test_sound),SoundClip("Dank10",R.raw.test_sound))
