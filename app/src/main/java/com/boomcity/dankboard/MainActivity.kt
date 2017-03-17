@@ -22,7 +22,6 @@ import android.support.v7.widget.RecyclerView
 import com.google.gson.*
 import android.support.design.widget.AppBarLayout
 
-
 class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     lateinit var mViewPager: ViewPager
@@ -119,7 +118,7 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     fun newSoundClipName(soundClipName: String, audioUri: String) {
         if (DataService.getTabsData().getTab(0)!!.soundClips.any { clip -> clip.Title.toLowerCase() == soundClipName.toLowerCase() }) {
             val errorBuilder = AlertDialog.Builder(this, R.style.DankAlertDialogStyle)
-            errorBuilder.setTitle("Yo that name is already in use man.")
+            errorBuilder.setTitle(R.string.tab_name_in_use)
             errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
                 dialog.dismiss()
             })

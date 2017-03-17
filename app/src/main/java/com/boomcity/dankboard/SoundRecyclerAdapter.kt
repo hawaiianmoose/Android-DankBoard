@@ -15,7 +15,9 @@ import android.widget.TextView
 class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) : RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>() {
     private var mDataset: MutableList<SoundClip> = data
     var mp: MediaPlayer = MediaPlayer()
-    var mediaState = "OK"
+    var mediaState: MediaState = MediaState.OK
+    var currentTrack = 0
+    lateinit var lastPlayButton: ImageButton
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val mSoundClip = SoundClip(mDataset[position].Title,mDataset[position].AudioId, mDataset[position].Path)
@@ -30,7 +32,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
             }
             else {
                 val deleteConfirmation = AlertDialog.Builder(holder.mView.context, R.style.DankAlertDialogStyle)
-                deleteConfirmation.setTitle("This will permanently remove the sound clip from the app. Continue? ")
+                deleteConfirmation.setTitle(R.string.permanent_delete)
                 deleteConfirmation.setNegativeButton(R.string.dialog_cancel, { dialog, which ->
                     dialog.dismiss()
                 })
@@ -44,15 +46,23 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
         val playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
 
-
         playButton.setOnClickListener {
-            if(mediaState == "OK" && mp.isPlaying) {
+            if (currentTrack == mSoundClip.AudioId && mediaState == MediaState.OK && mp.isPlaying) {
                 mp.stop()
                 playButton.setImageResource(R.drawable.ic_playbutton)
                 mp.release()
-                mediaState = "RELEASED"
+                mediaState = MediaState.RELEASED
             }
             else {
+                if (mediaState == MediaState.OK && mp.isPlaying) {
+                    mp.stop()
+                    mp.release()
+                    if(lastPlayButton != playButton) {
+                        lastPlayButton.setImageResource(R.drawable.ic_playbutton)
+                    }
+                    mediaState = MediaState.RELEASED
+                }
+
                 if (mSoundClip.Path != null) {
                     try {
                         mp = MediaPlayer.create(holder.mView.context, Uri.parse(mSoundClip.Path))
@@ -62,16 +72,17 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
                 } else {
                     mp = MediaPlayer.create(holder.mView.context, mSoundClip.AudioId)
                 }
-
                 mp.setOnCompletionListener {
                     playButton.setImageResource(R.drawable.ic_playbutton)
                     mp.release()
-                    mediaState = "RELEASED"
+                    mediaState = MediaState.RELEASED
                 }
 
                 mp.start()
                 playButton.setImageResource(android.R.drawable.ic_media_pause)
-                mediaState = "OK"
+                lastPlayButton = playButton
+                mediaState = MediaState.OK
+                currentTrack = mSoundClip.AudioId
             }
         }
 
@@ -87,7 +98,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
     fun showTabSelectionDialog(context: Context, soundClip: SoundClip) {
         val builder = AlertDialog.Builder(context, R.style.DankAlertDialogStyle)
-        builder.setTitle("Add dank sound to which tab?")
+        builder.setTitle(R.string.add_dank_sound)
 
         var arrayAdapter = ArrayAdapter<String>(context, android.R.layout.select_dialog_item)
 
@@ -97,7 +108,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
             }
         }
 
-        builder.setNegativeButton("Cancel", { dialog, which ->
+        builder.setNegativeButton(R.string.dialog_cancel, { dialog, which ->
             dialog.dismiss()
         })
 
@@ -105,7 +116,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
             if (DataService.getTabsData().getTab(which + 1)!!.soundClips.any { clip -> clip.AudioId == soundClip.AudioId }) {
                 val errorBuilder = AlertDialog.Builder(context, R.style.DankAlertDialogStyle)
-                errorBuilder.setTitle("This dank sound clip is already in that favorite tab bruh!")
+                errorBuilder.setTitle(R.string.dank_sound_exists)
                 errorBuilder.setNegativeButton(R.string.dialog_aight, { dialog, which ->
                     dialog.dismiss()
                 })
@@ -125,7 +136,7 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
 
-        var soundClipFragmentId: Int
+        val soundClipFragmentId: Int
 
         if (tabPosition > 0) {
             soundClipFragmentId = R.layout.fragment_sound_clip
@@ -140,5 +151,10 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
     }
 
     class ViewHolder(var mView: View) : RecyclerView.ViewHolder(mView)
+
+    enum class MediaState {
+        OK,
+        RELEASED,
+    }
 
 }
