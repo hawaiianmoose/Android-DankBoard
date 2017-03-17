@@ -14,6 +14,8 @@ import android.widget.TextView
 
 class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) : RecyclerView.Adapter<SoundRecyclerAdapter.ViewHolder>() {
     private var mDataset: MutableList<SoundClip> = data
+    var mp: MediaPlayer = MediaPlayer()
+    var mediaState = "OK"
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val mSoundClip = SoundClip(mDataset[position].Title,mDataset[position].AudioId, mDataset[position].Path)
@@ -41,34 +43,35 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
         }
 
         val playButton = holder.mView.findViewById(R.id.play_button) as ImageButton
-        val mp: MediaPlayer
 
-        if(mSoundClip.Path != null) {
-            try {
-                mp = MediaPlayer.create(holder.mView.context, Uri.parse(mSoundClip.Path))
-            }
-            catch (ex: Exception) {
-                text.setText(R.string.invalid_path)
-                return
-            }
-        }
-        else {
-            mp = MediaPlayer.create(holder.mView.context, mSoundClip.AudioId)
-        }
-
-        mp.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.ic_playbutton)
-        }
 
         playButton.setOnClickListener {
-            if(mp.isPlaying) {
-                mp.pause()
+            if(mediaState == "OK" && mp.isPlaying) {
+                mp.stop()
                 playButton.setImageResource(R.drawable.ic_playbutton)
+                mp.release()
+                mediaState = "RELEASED"
             }
-            else
-            {
+            else {
+                if (mSoundClip.Path != null) {
+                    try {
+                        mp = MediaPlayer.create(holder.mView.context, Uri.parse(mSoundClip.Path))
+                    } catch (ex: Exception) {
+                        text.setText(R.string.invalid_path)
+                    }
+                } else {
+                    mp = MediaPlayer.create(holder.mView.context, mSoundClip.AudioId)
+                }
+
+                mp.setOnCompletionListener {
+                    playButton.setImageResource(R.drawable.ic_playbutton)
+                    mp.release()
+                    mediaState = "RELEASED"
+                }
+
                 mp.start()
                 playButton.setImageResource(android.R.drawable.ic_media_pause)
+                mediaState = "OK"
             }
         }
 
