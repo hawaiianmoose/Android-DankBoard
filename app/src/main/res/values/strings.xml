@@ -1,14 +1,15 @@
 <resources>
     <string name="app_name">DankBoard</string>
-    <string name="new_tab_menu">New Favorites Tab</string>
+    <string name="new_tab_menu">New Tab</string>
     <string name="rename_tab_fab">Rename Tab</string>
     <string name="delete_tab_fab">Delete Tab</string>
     <string name="tab_name">New Tab Name</string>
     <string name="soundclip_name">New Sound Clip Name</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_yes">Yes</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_aight">Aight</string>
     <string name="new_custom_sound">Add Custom Sound Clip</string>
-
+    <string name="invalid_path">*-invalid path-*</string>
     <string name="title_activity_about">About</string>
 </resources>

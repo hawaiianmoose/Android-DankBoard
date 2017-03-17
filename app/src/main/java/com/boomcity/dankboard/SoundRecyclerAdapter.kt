@@ -21,11 +21,22 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
         val text = holder!!.mView.findViewById(R.id.sound_clip_text_view) as TextView
         text.setText(mSoundClip.Title)
 
-        val deleteExists = holder.mView.findViewById(R.id.delete_button)
-        if (deleteExists != null) {
-            val deleteButton = holder.mView.findViewById(R.id.delete_button) as ImageButton
-            deleteButton.setOnClickListener {
+        val deleteButton = holder.mView.findViewById(R.id.delete_button) as ImageButton
+        deleteButton.setOnClickListener {
+            if(tabPosition != 0) {
                 DataService.removeSoundClipFromTab(this,mSoundClip, tabPosition)
+            }
+            else {
+                val deleteConfirmation = AlertDialog.Builder(holder.mView.context, R.style.DankAlertDialogStyle)
+                deleteConfirmation.setTitle("This will permanently remove the sound clip from the app. Continue? ")
+                deleteConfirmation.setNegativeButton(R.string.dialog_cancel, { dialog, which ->
+                    dialog.dismiss()
+                })
+                deleteConfirmation.setPositiveButton(R.string.dialog_yes, {dialog, which ->
+                    DataService.removeSoundClipFromApp(mSoundClip)
+                    dialog.dismiss()
+                })
+                deleteConfirmation.show()
             }
         }
 
@@ -33,7 +44,13 @@ class SoundRecyclerAdapter(data: MutableList<SoundClip>, val tabPosition: Int) :
         val mp: MediaPlayer
 
         if(mSoundClip.Path != null) {
-            mp = MediaPlayer.create(holder.mView.context, Uri.parse(mSoundClip.Path))
+            try {
+                mp = MediaPlayer.create(holder.mView.context, Uri.parse(mSoundClip.Path))
+            }
+            catch (ex: Exception) {
+                text.setText(R.string.invalid_path)
+                return
+            }
         }
         else {
             mp = MediaPlayer.create(holder.mView.context, mSoundClip.AudioId)

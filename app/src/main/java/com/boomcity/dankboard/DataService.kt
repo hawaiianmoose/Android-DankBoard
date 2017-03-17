@@ -23,35 +23,35 @@ class DataService {
         fun init(tabsData: TabsData, sharedPrefs: SharedPreferences) {
             tabsDataObject = tabsData
             sharedPreferences = sharedPrefs
-            var json = gson.toJson(tabsDataObject)
+            val json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
         fun addNewTab(tabName: String, tabIndex: Int) {
             tabsDataObject.tabsList!!.add(TabDataInfo(tabName,tabIndex))
-            var json = gson.toJson(tabsDataObject)
+            val json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
         fun deleteTab(tabIndex: Int) {
             tabsDataObject.tabsList!!.removeAt(tabIndex)
-            var json = gson.toJson(tabsDataObject)
+            val json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
         }
 
         fun renameTab(newTabName: String, tabIndex: Int) {
             tabsDataObject.tabsList!![tabIndex].name = newTabName
-            var json = gson.toJson(tabsDataObject)
+            val json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
             viewPager.adapter.notifyDataSetChanged()
         }
 
         fun addClipToFavoriteTab(soundClip: SoundClip, tabIndex: Int){
-            var selectedTabView = viewPager.getChildAt(tabIndex)
-            var recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
-            var soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
+            val selectedTabView = viewPager.getChildAt(tabIndex)
+            val recyclerView = selectedTabView.findViewById(R.id.recycler_view) as RecyclerView
+            val soundAdapter = recyclerView.adapter as SoundRecyclerAdapter
             tabsDataObject.getTab(tabIndex)!!.soundClips.add(soundClip)
-            var json = gson.toJson(tabsDataObject)
+            val json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
             soundAdapter.notifyDataSetChanged()
         }
@@ -60,9 +60,24 @@ class DataService {
             tabsDataObject.getTab(tabIndex)!!.soundClips.removeAll { clip ->
                 clip.AudioId == soundClip.AudioId
             }
-            var json = gson.toJson(tabsDataObject)
+            val json = gson.toJson(tabsDataObject)
             sharedPreferences.edit().putString("TabsDataInfo", json).apply()
             soundAdapter.notifyDataSetChanged()
+        }
+
+        fun removeSoundClipFromApp(soundClip: SoundClip) {
+            for (tab in tabsDataObject.tabsList!!) {
+                tab.soundClips.removeAll { clip ->
+                    clip.AudioId == soundClip.AudioId
+                }
+            }
+
+            val json = gson.toJson(tabsDataObject)
+            sharedPreferences.edit().putString("TabsDataInfo", json).apply()
+
+            tabsDataObject.tabsList!!
+                    .map { viewPager.getChildAt(it.position).findViewById(R.id.recycler_view) as RecyclerView }
+                    .forEach { it.adapter.notifyDataSetChanged() }
         }
     }
 }

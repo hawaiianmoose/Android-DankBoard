@@ -42,6 +42,10 @@ class TabFragment : Fragment() {
         return rootView
     }
 
+    fun update(){
+        mAdapter.notifyDataSetChanged()
+    }
+
     companion object {
         val ARG_SECTION_NUMBER = "tab_number"
 
