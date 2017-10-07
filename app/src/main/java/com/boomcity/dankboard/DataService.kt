@@ -12,9 +12,7 @@ class DataService {
         private lateinit var sharedPreferences: SharedPreferences
         private var gson = Gson()
 
-        fun getTabsData() : TabsData{
-            return tabsDataObject
-        }
+        fun getTabsData() : TabsData = tabsDataObject
 
         fun setViewpager(vp: ViewPager) {
             viewPager = vp

@@ -76,17 +76,16 @@ class MainActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
 
         if (tabsData == null) {
             //first startup
-            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("AirPorn",R.raw.airporn), SoundClip("AirHorn",R.raw.horn),
-                    SoundClip("Go Away Batin",R.raw.batin),SoundClip("BBC",R.raw.bbc),SoundClip("BlahBlahBlah",R.raw.blahblah),
-                    SoundClip("Bobby",R.raw.bobby),SoundClip("Scott Bradford",R.raw.bradford),SoundClip("Butt Boys",R.raw.buttboys),
-                    SoundClip("Butt Fuck",R.raw.buttfuck),SoundClip("Cheapest Drug",R.raw.cheapdrug),SoundClip("Cowbell",R.raw.cowbell),
-                    SoundClip("Dedotated Wham",R.raw.dedotated),SoundClip("Deez Nuts",R.raw.deeznuts),SoundClip("Dew",R.raw.dew),SoundClip("Donkey Dick",R.raw.donkeydick),
-                    SoundClip("Dota",R.raw.dota),SoundClip("Get Dumped On",R.raw.dumpedon),SoundClip("Eat A Dick",R.raw.eatadick),SoundClip("Eggs",R.raw.eggs),
-                    SoundClip("Finger Butt",R.raw.fingerbutt), SoundClip("Gayest Shit",R.raw.gayestshit), SoundClip("Harry",R.raw.harry), SoundClip("Homos Naked",R.raw.homosnaked),
-                    SoundClip("I'm Gay",R.raw.imgay),SoundClip("Inception",R.raw.inception),SoundClip("Jerry",R.raw.jerry),SoundClip("Jonwall",R.raw.jonwallmissplay),
-                    SoundClip("Juice Me Bitch",R.raw.juiceme),SoundClip("Kangaroo Court",R.raw.kangaroo),SoundClip("Maybe Fuck You",R.raw.maybefuku),SoundClip("Ohhhhh",R.raw.ohhhhh),
-                    SoundClip("Ohhhhh2",R.raw.ohhhh2),SoundClip("Psyche",R.raw.psyche),SoundClip("Take a Sip",R.raw.sip),SoundClip("Smoke Weed",R.raw.smokeweed),SoundClip("2Spooky",R.raw.spookyhorn),
-                    SoundClip("Titty City",R.raw.tittycity),SoundClip("Touching His Ass",R.raw.touchinghisass),SoundClip("Triple",R.raw.triple),SoundClip("Wine Poop",R.raw.winepoop),SoundClip("Wombo Combo",R.raw.wombo),
+            val defaultTabSounds = mutableListOf<SoundClip>(SoundClip("AirPorn",R.raw.airporn), SoundClip("AirHorn",R.raw.horn),SoundClip("BBC",R.raw.bbc),
+                    SoundClip("BlahBlahBlah",R.raw.blahblah),
+                    SoundClip("Bobby",R.raw.bobby),SoundClip("Scott Bradford",R.raw.bradford), SoundClip("Cowbell",R.raw.cowbell),
+                    SoundClip("Dedotated Wham",R.raw.dedotated),SoundClip("Deez Nuts",R.raw.deeznuts),SoundClip("Dew",R.raw.dew),
+                    SoundClip("Dota",R.raw.dota),SoundClip("Get Dumped On",R.raw.dumpedon),SoundClip("Eat A Dick",R.raw.eatadick),
+                    SoundClip("Eggs",R.raw.eggs), SoundClip("Harry",R.raw.harry),
+                    SoundClip("I'm Gay",R.raw.imgay),SoundClip("Jonwall",R.raw.jonwallmissplay),
+                    SoundClip("Juice Me Bitch",R.raw.juiceme),SoundClip("Ohhhhh",R.raw.ohhhhh),
+                    SoundClip("Ohhhhh2",R.raw.ohhhh2),SoundClip("Psyche",R.raw.psyche),SoundClip("Take a Sip",R.raw.sip),SoundClip("2Spooky",R.raw.spookyhorn),
+                    SoundClip("Triple",R.raw.triple),SoundClip("Wine Poop",R.raw.winepoop),SoundClip("Wombo Combo",R.raw.wombo),
                     SoundClip("Wrecking Ball",R.raw.wreckingball))
             tabsData = TabsData(mutableListOf(TabDataInfo("All",0, defaultTabSounds),TabDataInfo("Favorites", 1, mutableListOf())))
         }
